@@ -1011,6 +1011,8 @@ public class AnalyzeForm extends javax.swing.JFrame {
                                     + "%");
                         }
                     });
+                } else {
+                    sumValue += summary.getSize();
                 }
             }
             for (Download currentDownload : downloads) {
