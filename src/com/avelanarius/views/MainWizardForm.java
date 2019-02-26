@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.avelanarius.models.CompiledExecutableGenerator;
 import com.avelanarius.models.ExecutableGenerator;
 import com.avelanarius.models.TaskSuite;
 import com.avelanarius.models.TaskSuiteZIPBuilder;
@@ -51,6 +52,7 @@ public class MainWizardForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -73,6 +75,11 @@ public class MainWizardForm extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jFieldGeneratorEXE = new javax.swing.JTextField();
         jButtonChooseEXE = new javax.swing.JButton();
+        jRadioEXE = new javax.swing.JRadioButton();
+        jRadioKompilowalny = new javax.swing.JRadioButton();
+        jLabel13 = new javax.swing.JLabel();
+        jFieldGeneratorCompiled = new javax.swing.JTextField();
+        jButtonChooseCompiled = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jListWejsciowe = new javax.swing.JList<>();
@@ -202,7 +209,7 @@ public class MainWizardForm extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jFieldNazwaKonfiguracji, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinnerWersja, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12))
@@ -240,6 +247,37 @@ public class MainWizardForm extends javax.swing.JFrame {
             }
         });
 
+        buttonGroup1.add(jRadioEXE);
+        jRadioEXE.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jRadioEXE.setSelected(true);
+        jRadioEXE.setText("Generator EXE");
+        jRadioEXE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioEXEActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(jRadioKompilowalny);
+        jRadioKompilowalny.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jRadioKompilowalny.setText("Kompilowalny plik");
+        jRadioKompilowalny.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioKompilowalnyActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("Plik źródłowy");
+
+        jFieldGeneratorCompiled.setEnabled(false);
+
+        jButtonChooseCompiled.setText("...");
+        jButtonChooseCompiled.setEnabled(false);
+        jButtonChooseCompiled.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonChooseCompiledActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -251,12 +289,24 @@ public class MainWizardForm extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jDalej2))
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jRadioKompilowalny, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRadioEXE, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addGap(18, 18, 18)
-                        .addComponent(jFieldGeneratorEXE, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonChooseEXE)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jFieldGeneratorCompiled, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel8)
+                                .addGap(18, 18, 18)
+                                .addComponent(jFieldGeneratorEXE, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonChooseCompiled)
+                            .addComponent(jButtonChooseEXE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -265,11 +315,20 @@ public class MainWizardForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jRadioEXE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jFieldGeneratorEXE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonChooseEXE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 390, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
+                .addComponent(jRadioKompilowalny)
+                .addGap(6, 6, 6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(jFieldGeneratorCompiled, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonChooseCompiled))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 307, Short.MAX_VALUE)
                 .addComponent(jDalej2)
                 .addContainerGap())
         );
@@ -512,19 +571,21 @@ public class MainWizardForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonDodajAktualnyActionPerformed
 
     private void jButtonSaveZIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveZIPActionPerformed
-        if (!sprawdzKonfiguracje()) return;
+        if (!sprawdzKonfiguracje()) {
+            return;
+        }
         jFileChooser.setSelectedFile(new File(this.jFieldNazwaKonfiguracji.getText() + ".zip"));
         if (this.jFileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             if (!jFileChooser.getSelectedFile().getName().equals(this.jFieldNazwaKonfiguracji.getText() + ".zip")) {
-                  JOptionPane.showMessageDialog(this, "Plik wyjściowy musi mieć tą samą nazwę co nazwa konfiguracji!", "Zła nazwa pliku", JOptionPane.ERROR_MESSAGE);
-                  return;
+                JOptionPane.showMessageDialog(this, "Plik wyjściowy musi mieć tą samą nazwę co nazwa konfiguracji!", "Zła nazwa pliku", JOptionPane.ERROR_MESSAGE);
+                return;
             }
             TaskSuiteZIPBuilder zipBuilder = new TaskSuiteZIPBuilder();
             zipBuilder.setFilename(this.jFileChooser.getSelectedFile().getAbsolutePath());
             zipBuilder.setTaskSuite(this.getTaskSuite());
             zipBuilder.generateZIP();
             if (JOptionPane.showConfirmDialog(this, "Wysłać konfigurację do S3?", "S3 Upload", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-              Runnable uploadTask = () -> {
+                Runnable uploadTask = () -> {
                     this.jProgressUpload.setEnabled(true);
                     this.jProgressUpload.setIndeterminate(true);
                     this.jProgressUpload.setString("Wysyłanie...");
@@ -538,14 +599,14 @@ public class MainWizardForm extends javax.swing.JFrame {
                         metadata.addUserMetadata("iloscPlikow", String.valueOf(this.textFileInputs.size()));
                         metadata.addUserMetadata("wersja", String.valueOf((Integer) this.jSpinnerWersja.getValue()));
                         s3.putObject(new PutObjectRequest("outgeneratordesc", this.jFileChooser.getSelectedFile().getName(),
-                            this.jFileChooser.getSelectedFile()).withCannedAcl(CannedAccessControlList.PublicRead).withMetadata(metadata));
+                                this.jFileChooser.getSelectedFile()).withCannedAcl(CannedAccessControlList.PublicRead).withMetadata(metadata));
                         JOptionPane.showMessageDialog(this, "Wysyłanie konfiguracji zakończone sukcesem!", "Powodzenie wysyłania", JOptionPane.INFORMATION_MESSAGE);
                     } catch (Exception ex) {
-                         JOptionPane.showMessageDialog(this, "Błąd przy wysłaniu konfiguracji!" + ex.toString(), "Błąd wysyłania", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Błąd przy wysłaniu konfiguracji!" + ex.toString(), "Błąd wysyłania", JOptionPane.ERROR_MESSAGE);
                     }
-                     this.jProgressUpload.setString("");
-                     this.jProgressUpload.setEnabled(false);
-                     this.jProgressUpload.setIndeterminate(false);
+                    this.jProgressUpload.setString("");
+                    this.jProgressUpload.setEnabled(false);
+                    this.jProgressUpload.setIndeterminate(false);
                 };
                 Thread uploadThread = new Thread(uploadTask);
                 uploadThread.start();
@@ -558,7 +619,11 @@ public class MainWizardForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Nazwa konfiguracji jest pusta!", "Pusta nazwa konfiguracji", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (!new File(this.jFieldGeneratorEXE.getText()).isFile()) {
+        if (jRadioEXE.isSelected() && !new File(this.jFieldGeneratorEXE.getText()).isFile()) {
+            JOptionPane.showMessageDialog(this, "Podano nieprawidłowy plik generatora!", "Nieprawidłowy generator", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (jRadioKompilowalny.isSelected() && !new File(this.jFieldGeneratorCompiled.getText()).isFile()) {
             JOptionPane.showMessageDialog(this, "Podano nieprawidłowy plik generatora!", "Nieprawidłowy generator", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -568,7 +633,7 @@ public class MainWizardForm extends javax.swing.JFrame {
         }
         return true;
     }
-    
+
     private void jButtonDodajAutomatycznieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDodajAutomatycznieActionPerformed
         jFileChooser.setMultiSelectionEnabled(true);
         if (this.jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -596,7 +661,9 @@ public class MainWizardForm extends javax.swing.JFrame {
                 String filename = this.textFileInputs.get(selectedIndex).getPath();
                 String contents = Files.lines(Paths.get(filename)).limit(500).collect(Collectors.joining(System.lineSeparator()));
                 this.jAreaPodsumowaniePlik.setText(contents);
-            } else this.jAreaPodsumowaniePlik.setText("");
+            } else {
+                this.jAreaPodsumowaniePlik.setText("");
+            }
         } catch (Exception ex) {
             this.jAreaPodsumowaniePlik.setText("Błąd wczytywania pliku!");
             Logger.getLogger(MainWizardForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -618,7 +685,9 @@ public class MainWizardForm extends javax.swing.JFrame {
                 String filename = this.textFileInputs.get(selectedIndex).getPath();
                 String contents = Files.lines(Paths.get(filename)).limit(500).collect(Collectors.joining(System.lineSeparator()));
                 this.jAreaZawartoscPliku.setText(contents);
-            } else this.jAreaZawartoscPliku.setText("");
+            } else {
+                this.jAreaZawartoscPliku.setText("");
+            }
         } catch (Exception ex) {
             this.jAreaZawartoscPliku.setText("Błąd wczytywania pliku!");
             Logger.getLogger(MainWizardForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -631,18 +700,50 @@ public class MainWizardForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
+    private void jButtonChooseCompiledActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonChooseCompiledActionPerformed
+        if (this.jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            this.jFieldGeneratorCompiled.setText(this.jFileChooser.getSelectedFile().getAbsolutePath());
+        }
+    }//GEN-LAST:event_jButtonChooseCompiledActionPerformed
+
+    private void jRadioEXEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioEXEActionPerformed
+        this.jFieldGeneratorCompiled.setEnabled(false);
+        this.jButtonChooseCompiled.setEnabled(false);
+
+        this.jFieldGeneratorEXE.setEnabled(true);
+        this.jButtonChooseEXE.setEnabled(true);
+    }//GEN-LAST:event_jRadioEXEActionPerformed
+
+    private void jRadioKompilowalnyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioKompilowalnyActionPerformed
+        this.jFieldGeneratorCompiled.setEnabled(true);
+        this.jButtonChooseCompiled.setEnabled(true);
+
+        this.jFieldGeneratorEXE.setEnabled(false);
+        this.jButtonChooseEXE.setEnabled(false);
+    }//GEN-LAST:event_jRadioKompilowalnyActionPerformed
+
     private void aktualizujPodsumowanie() {
         StringBuilder podsumowanie = new StringBuilder();
         podsumowanie.append("Nazwa: ").append(this.jFieldNazwaKonfiguracji.getText()).append(System.getProperty("line.separator"));
-        podsumowanie.append("Wersja: ").append((Integer)this.jSpinnerWersja.getValue()).append(System.getProperty("line.separator"));
+        podsumowanie.append("Wersja: ").append((Integer) this.jSpinnerWersja.getValue()).append(System.getProperty("line.separator"));
         podsumowanie.append("Opis: ").append(this.jAreaOpis.getText()).append(System.getProperty("line.separator"));
-        podsumowanie.append("Generator: ").append(this.jFieldGeneratorEXE.getText()).append(System.getProperty("line.separator"));
+        if (this.jRadioEXE.isSelected()) {
+            podsumowanie.append("Generator: ").append(this.jFieldGeneratorEXE.getText()).append(System.getProperty("line.separator"));
+        } else {
+            podsumowanie.append("Generator: ").append(this.jFieldGeneratorCompiled.getText()).append(System.getProperty("line.separator"));
+        }
         this.jAreaPodsumowanie.setText(podsumowanie.toString());
     }
-    
+
     private TaskSuite getTaskSuite() {
-        ExecutableGenerator executableGenerator = new ExecutableGenerator();
-        executableGenerator.setExecutablePath(this.jFieldGeneratorEXE.getText());
+        ExecutableGenerator executableGenerator;
+        if (this.jRadioEXE.isSelected()) {
+            executableGenerator = new ExecutableGenerator();
+            executableGenerator.setExecutablePath(this.jFieldGeneratorEXE.getText());
+        } else {
+            executableGenerator = new CompiledExecutableGenerator();
+            executableGenerator.setExecutablePath(this.jFieldGeneratorCompiled.getText());
+        }
         TaskSuite taskSuite = new TaskSuite();
         taskSuite.setName(this.jFieldNazwaKonfiguracji.getText());
         taskSuite.setDescription(this.jAreaOpis.getText());
@@ -681,10 +782,12 @@ public class MainWizardForm extends javax.swing.JFrame {
     private JFileChooser jFileChooser;
     private ArrayList<TextFileInput> textFileInputs = new ArrayList<TextFileInput>();
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JTextArea jAreaOpis;
     private javax.swing.JTextArea jAreaPodsumowanie;
     private javax.swing.JTextArea jAreaPodsumowaniePlik;
     private javax.swing.JTextArea jAreaZawartoscPliku;
+    private javax.swing.JButton jButtonChooseCompiled;
     private javax.swing.JButton jButtonChooseEXE;
     private javax.swing.JButton jButtonChoosePlikWejsciowy;
     private javax.swing.JButton jButtonDodajAktualny;
@@ -694,6 +797,7 @@ public class MainWizardForm extends javax.swing.JFrame {
     private javax.swing.JButton jDalej1;
     private javax.swing.JButton jDalej2;
     private javax.swing.JButton jDalej3;
+    private javax.swing.JTextField jFieldGeneratorCompiled;
     private javax.swing.JTextField jFieldGeneratorEXE;
     private javax.swing.JTextField jFieldNazwaKonfiguracji;
     private javax.swing.JTextField jFieldNazwaPlikWejsciowy;
@@ -702,6 +806,7 @@ public class MainWizardForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -719,6 +824,8 @@ public class MainWizardForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JProgressBar jProgressUpload;
+    private javax.swing.JRadioButton jRadioEXE;
+    private javax.swing.JRadioButton jRadioKompilowalny;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

@@ -96,6 +96,7 @@ public class AllTasksManager {
             ois = new ObjectInputStream(new FileInputStream(path));
             TaskSuite taskSuite = (TaskSuite) ois.readObject();
             taskSuite.setAllFilesToPath(Paths.get(path).getParent().toAbsolutePath().toString() + File.separator);
+            taskSuite.getExecutableGenerator().prepareGenerator();
             ois.close();
 
             TaskSuiteReport taskSuiteReport = new TaskSuiteReport();

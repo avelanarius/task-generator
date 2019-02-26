@@ -20,7 +20,7 @@ public class ExecutableGenerator implements Serializable {
     public ExecutableGenerator(String executablePath) {
         this.executablePath = executablePath;
     }
-
+    
     public String getExecutablePath() {
         return this.executablePath;
     }
@@ -29,6 +29,9 @@ public class ExecutableGenerator implements Serializable {
         this.executablePath = executablePath;
     }
 
+    public void prepareGenerator() {
+    } 
+    
     public void generateOutput(TextFileInput textFileInput, TextFileOutput textFileOutput) {
         try {
             Process process = this.setupProcess();
