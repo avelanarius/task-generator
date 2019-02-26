@@ -10,6 +10,7 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.Region;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.transfer.Download;
+import com.amazonaws.services.s3.transfer.Transfer;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerConfiguration;
 import com.amazonaws.util.IOUtils;
@@ -27,6 +28,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -671,15 +673,15 @@ public class AnalyzeForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonAWS, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonDodajWiele, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                            .addComponent(jButtonDodaj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonAWS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonDodajWiele, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                            .addComponent(jButtonDodaj, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jProgressAWS, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonClear, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonRefresh, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                            .addComponent(jProgressAWS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTabbedPane1)))
                 .addContainerGap())
@@ -984,34 +986,36 @@ public class AnalyzeForm extends javax.swing.JFrame {
             this.jProgressAWS.setValue(0);
             this.jProgressAWS.setMaximum(100);
             TransferManager tm = new TransferManager();
+            long _wholeSize = 0;
             for (S3ObjectSummary summary : summaries) {
                 this.files.add(tmpDir + File.separator + summary.getKey());
+                _wholeSize += summary.getSize();
             }
             this.files = new ArrayList<String>(this.files.stream().distinct().collect(Collectors.toList()));
-            long _wholeSize = 0;
             this.jProgressAWS.setString("Starting downloads");
-            ArrayList<Download> downloads = new ArrayList<Download>();
+            List<Download> downloads = new ArrayList<Download>();
+            final long wholeSize = _wholeSize;
+            sumValue = 0;
             for (S3ObjectSummary summary : summaries) {
                 if (!(new File(tmpDir + File.separator + summary.getKey()).isFile())) {
                     Download currentDownload = tm.download(new GetObjectRequest("outgenerator2", summary.getKey()), new File(tmpDir + File.separator + summary.getKey()));
-                    _wholeSize += currentDownload.getProgress().getTotalBytesToTransfer();
                     downloads.add(currentDownload);
+                    currentDownload.addProgressListener(new ProgressListener() {
+                        @Override
+                        public void progressChanged(ProgressEvent pe) {
+                            sumValue += pe.getBytesTransferred();
+                            AnalyzeForm.this.jProgressAWS.setValue(
+                                    (int) (sumValue * 100 / wholeSize));
+                            AnalyzeForm.this.jProgressAWS.setString(
+                                    (int) (sumValue * 100 / wholeSize)
+                                    + "%");
+                        }
+                    });
                 }
             }
-            final long wholeSize = _wholeSize;
-            for (Download download : downloads) {
-                download.addProgressListener(new ProgressListener() {
-                    @Override
-                    public void progressChanged(ProgressEvent pe) {
-                        long sumValue = downloads.stream().map(q -> q.getProgress().getBytesTransferred()).reduce(0L, Long::sum);
-                        AnalyzeForm.this.jProgressAWS.setValue((int) (sumValue * 100 / wholeSize));
-                        AnalyzeForm.this.jProgressAWS.setString((int) (sumValue * 100 / wholeSize) + "%");
-                    }
-                });
-            }
-            for (Download download : downloads) {
+            for (Download currentDownload : downloads) {
                 try {
-                    download.waitForException();
+                    currentDownload.waitForException();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(AnalyzeForm.class.getName()).log(Level.SEVERE, "Error downloading", ex);
                 }
@@ -1023,6 +1027,7 @@ public class AnalyzeForm extends javax.swing.JFrame {
             this.jListFiles.setListData(filesData);
         };
         Thread downloadThread = new Thread(downloadTask);
+
         downloadThread.start();
     }//GEN-LAST:event_jButtonAWSActionPerformed
 
@@ -1190,13 +1195,17 @@ public class AnalyzeForm extends javax.swing.JFrame {
             UIManager.setLookAndFeel(
                     UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MainWizardForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainWizardForm.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            Logger.getLogger(MainWizardForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainWizardForm.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(MainWizardForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainWizardForm.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(MainWizardForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainWizardForm.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1210,6 +1219,7 @@ public class AnalyzeForm extends javax.swing.JFrame {
     private JFileChooser jFileChooser = new JFileChooser();
     private List<GenerationInfo> loadedInfo;
     private boolean whileRefresh = false;
+    private long sumValue = 0;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1Zmienna;
     private javax.swing.JButton jButtonAWS;
