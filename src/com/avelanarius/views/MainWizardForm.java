@@ -28,6 +28,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.apache.commons.text.translate.UnicodeEscaper;
 
 /**
  *
@@ -595,7 +596,8 @@ public class MainWizardForm extends javax.swing.JFrame {
                         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", new Locale("us"));
                         metadata.addUserMetadata("updatedAt", sdf.format(Calendar.getInstance().getTime()));
                         metadata.addUserMetadata("nazwa", this.jFieldNazwaKonfiguracji.getText());
-                        metadata.addUserMetadata("opis", this.jAreaOpis.getText());
+                        UnicodeEscaper escaper = new UnicodeEscaper();
+                        metadata.addUserMetadata("opis", escaper.translate(this.jAreaOpis.getText()));
                         metadata.addUserMetadata("iloscPlikow", String.valueOf(this.textFileInputs.size()));
                         metadata.addUserMetadata("wersja", String.valueOf((Integer) this.jSpinnerWersja.getValue()));
                         s3.putObject(new PutObjectRequest("outgeneratordesc", this.jFileChooser.getSelectedFile().getName(),

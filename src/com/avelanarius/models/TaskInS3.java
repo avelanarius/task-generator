@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.text.translate.UnicodeUnescaper;
 
 public class TaskInS3 {
     private String name;
@@ -72,7 +73,8 @@ public class TaskInS3 {
             Logger.getLogger(TaskInS3.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (metadata.containsKey("nazwa")) this.setName(metadata.get("nazwa"));
-        if (metadata.containsKey("opis")) this.setOpis(metadata.get("opis"));
+        UnicodeUnescaper unescaper = new UnicodeUnescaper();
+        if (metadata.containsKey("opis")) this.setOpis(unescaper.translate(metadata.get("opis")));
         if (metadata.containsKey("iloscplikow")) this.setIloscPlikow(Integer.valueOf(metadata.get("iloscplikow")));
         if (metadata.containsKey("wersja")) this.setWersja(Integer.valueOf(metadata.get("wersja")));
     }

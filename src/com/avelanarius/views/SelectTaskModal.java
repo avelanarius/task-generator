@@ -58,7 +58,7 @@ public class SelectTaskModal extends javax.swing.JDialog {
         jListTasks = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Select task from S3");
+        setTitle("Wybierz zadanie z S3");
 
         jButtonOK.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         jButtonOK.setText("OK");
