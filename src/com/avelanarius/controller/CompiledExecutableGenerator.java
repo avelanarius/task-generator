@@ -1,4 +1,4 @@
-package com.avelanarius.models;
+package com.avelanarius.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,5 +18,5 @@ public class CompiledExecutableGenerator extends ExecutableGenerator {
             Logger.getLogger(CompiledExecutableGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.setExecutablePath(newPath);
-    }
+    }   
 }

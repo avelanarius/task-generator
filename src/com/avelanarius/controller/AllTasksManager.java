@@ -1,4 +1,4 @@
-package com.avelanarius.models;
+package com.avelanarius.controller;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -6,6 +6,9 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.avelanarius.models.TaskInS3;
+import com.avelanarius.models.TaskSuite;
+import com.avelanarius.models.TaskSuiteReport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,6 +29,7 @@ public class AllTasksManager {
     private static final long REFRESH_TIME = TimeUnit.SECONDS.toMillis(120);
     private AmazonS3 s3;
     private ParallelReportGenerator parallelReportGenerator;
+    private TasksInS3Manager manager;
     private SecureRandom random = new SecureRandom();
     private HashMap<String, String> mapNameToDirectory = new HashMap<>();
     private HashMap<String, Date> mapNameToUpdatedTime = new HashMap<>();
@@ -35,11 +39,12 @@ public class AllTasksManager {
         this.s3 = new AmazonS3Client();
         int cores = Runtime.getRuntime().availableProcessors();
         this.parallelReportGenerator = new ParallelReportGenerator(cores);
+        this.manager = new TasksInS3Manager(this.s3);
     }
 
     public void run() {
         while (true) {
-            ArrayList<TaskInS3> taskList = this.listTasks();
+            List<TaskInS3> taskList = this.manager.listTasks();
             if (taskList != null) {
                 taskList.forEach(task -> this.downloadTask(task));
                 ArrayList<TaskSuiteReport> newReports = new ArrayList<>();
@@ -56,27 +61,6 @@ public class AllTasksManager {
                 Logger.getLogger(AllTasksManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
-
-    public ArrayList<TaskInS3> listTasks() {
-        ArrayList<TaskInS3> tasks = new ArrayList<>();
-        try {
-            ObjectListing objList = s3.listObjects("outgeneratordesc");
-            List<S3ObjectSummary> summaries = objList.getObjectSummaries();
-
-            for (S3ObjectSummary summary : summaries) {
-                ObjectMetadata objectMetadata = s3.getObjectMetadata("outgeneratordesc", summary.getKey());
-                Map userMetadataMap = objectMetadata.getUserMetadata();
-                TaskInS3 newTask = new TaskInS3();
-                newTask.setName(summary.getKey().replace(".zip", ""));
-                newTask.fillFromMetadata(userMetadataMap);
-                tasks.add(newTask);
-            }
-            return tasks;
-        } catch (Exception ex) {
-            Logger.getLogger(AllTasksManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
     }
 
     public void downloadTask(TaskInS3 task) {

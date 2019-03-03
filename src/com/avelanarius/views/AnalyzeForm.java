@@ -14,7 +14,7 @@ import com.amazonaws.services.s3.transfer.Transfer;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerConfiguration;
 import com.amazonaws.util.IOUtils;
-import com.avelanarius.models.ExecutableGenerator;
+import com.avelanarius.controller.ExecutableGenerator;
 import com.avelanarius.models.GenerationInfo;
 import com.avelanarius.models.TaskSuiteReport;
 import com.avelanarius.models.TextFileInput;

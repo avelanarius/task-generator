@@ -1,6 +1,6 @@
 package com.avelanarius;
 
-import com.avelanarius.models.AllTasksManager;
+import com.avelanarius.controller.AllTasksManager;
 import com.avelanarius.views.AnalyzeForm;
 import com.avelanarius.views.MainWizardForm;
 import java.util.Scanner;

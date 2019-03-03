@@ -1,5 +1,6 @@
 package com.avelanarius.models;
 
+import com.avelanarius.controller.ExecutableGenerator;
 import java.io.Serializable;
 import java.nio.file.Paths;
 import java.security.SecureRandom;

@@ -1,7 +1,11 @@
-package com.avelanarius.models;
+package com.avelanarius.controller;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.avelanarius.models.GenerationInfo;
+import com.avelanarius.models.TaskSuiteReport;
+import com.avelanarius.models.TextFileInput;
+import com.avelanarius.models.TextFileOutput;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;

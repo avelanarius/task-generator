@@ -1,5 +1,7 @@
-package com.avelanarius.models;
+package com.avelanarius.controller;
 
+import com.avelanarius.models.TaskSuite;
+import com.avelanarius.models.TextFileInput;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
