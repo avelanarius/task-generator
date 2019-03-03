@@ -16,6 +16,7 @@ import com.amazonaws.services.s3.transfer.TransferManagerConfiguration;
 import com.amazonaws.util.IOUtils;
 import com.avelanarius.controller.ExecutableGenerator;
 import com.avelanarius.models.GenerationInfo;
+import com.avelanarius.models.TaskInS3;
 import com.avelanarius.models.TaskSuiteReport;
 import com.avelanarius.models.TextFileInput;
 import com.avelanarius.models.TextFileOutput;
@@ -975,8 +976,9 @@ public class AnalyzeForm extends javax.swing.JFrame {
 
     private void jButtonAWSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAWSActionPerformed
         Runnable downloadTask = () -> {
-            //this.clearInputs();
-            String nazwa = JOptionPane.showInputDialog(this, "Podaj nazwę konfiguracji:");
+            TaskInS3 task = SelectTaskModal.showSelectTaskModal(this);
+            if (task == null) return;
+            String nazwa = task.getName();
             String tmpDir = System.getProperty("java.io.tmpdir");
             AmazonS3 s3 = new AmazonS3Client();
             s3.setRegion(com.amazonaws.regions.Region.getRegion(com.amazonaws.regions.Regions.EU_CENTRAL_1));
