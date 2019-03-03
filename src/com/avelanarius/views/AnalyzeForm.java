@@ -975,10 +975,12 @@ public class AnalyzeForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonChartActionPerformed
 
     private void jButtonAWSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAWSActionPerformed
+        TaskInS3 task = SelectTaskModal.showSelectTaskModal(this);
+        if (task == null) {
+            return;
+        }
+        String nazwa = task.getName();
         Runnable downloadTask = () -> {
-            TaskInS3 task = SelectTaskModal.showSelectTaskModal(this);
-            if (task == null) return;
-            String nazwa = task.getName();
             String tmpDir = System.getProperty("java.io.tmpdir");
             AmazonS3 s3 = new AmazonS3Client();
             s3.setRegion(com.amazonaws.regions.Region.getRegion(com.amazonaws.regions.Regions.EU_CENTRAL_1));

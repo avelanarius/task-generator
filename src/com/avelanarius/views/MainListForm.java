@@ -102,12 +102,12 @@ public class MainListForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2)
                     .addComponent(jButton3)
                     .addComponent(jButton4)
                     .addComponent(jButton5)
-                    .addComponent(jButtonOdswiez))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButtonOdswiez)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();

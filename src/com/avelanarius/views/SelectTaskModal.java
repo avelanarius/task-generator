@@ -19,20 +19,27 @@ public class SelectTaskModal extends javax.swing.JDialog {
     public SelectTaskModal(AmazonS3 s3, JFrame parent) {
         super(parent);
         this.s3 = s3;
-        this.tasks = new TasksInS3Manager(s3).listTasks();
-        this.tasksModel = new DefaultListModel();
-        this.tasksModel.addAll(this.tasks);
 
         initComponents();
 
-        this.jListTasks.setCellRenderer(new TaskInfoCell());
-        this.jListTasks.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent arg0) {
-                jButtonOK.setEnabled(true);
-                selectedTask = tasks.get(arg0.getFirstIndex());
-            }
-        });
+        Runnable downloadTasks = () -> {
+            this.tasks = new TasksInS3Manager(s3).listTasks();
+            this.tasksModel = new DefaultListModel();
+            this.tasksModel.addAll(this.tasks);
+            this.jListTasks.setModel(this.tasksModel);
+            this.jListTasks.setCellRenderer(new TaskInfoCell());
+            this.jListTasks.addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent arg0) {
+                    jButtonOK.setEnabled(true);
+                    selectedTask = tasks.get(arg0.getFirstIndex());
+                }
+            });
+            this.jProgressBar1.setIndeterminate(false);
+            this.jProgressBar1.setStringPainted(false);
+        };
+        this.downloadTask = new Thread(downloadTasks);
+        this.downloadTask.start();
     }
 
     public static TaskInS3 showSelectTaskModal(JFrame parent) {
@@ -56,6 +63,7 @@ public class SelectTaskModal extends javax.swing.JDialog {
         jButtonCancel = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jListTasks = new javax.swing.JList<>();
+        jProgressBar1 = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Wybierz zadanie z S3");
@@ -76,9 +84,12 @@ public class SelectTaskModal extends javax.swing.JDialog {
             }
         });
 
-        jListTasks.setModel(this.tasksModel);
         jListTasks.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jListTasks);
+
+        jProgressBar1.setIndeterminate(true);
+        jProgressBar1.setString("Pobieranie...");
+        jProgressBar1.setStringPainted(true);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -86,13 +97,14 @@ public class SelectTaskModal extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                        .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -101,9 +113,11 @@ public class SelectTaskModal extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonOK)
-                    .addComponent(jButtonCancel))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonOK)
+                        .addComponent(jButtonCancel))
+                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -123,6 +137,7 @@ public class SelectTaskModal extends javax.swing.JDialog {
         return selectedTask;
     }
 
+    private Thread downloadTask;
     private TaskInS3 selectedTask;
     private List<TaskInS3> tasks;
     private DefaultListModel tasksModel;
@@ -131,6 +146,7 @@ public class SelectTaskModal extends javax.swing.JDialog {
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOK;
     private javax.swing.JList<String> jListTasks;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
